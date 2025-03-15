@@ -28,6 +28,13 @@ local function toggleJumpBoost()
     applyJumpBoost(game.Players.LocalPlayer)
 end
 
+local function setJumpBoost(power)
+    jump.power = power
+    if jump.enabled then
+        applyJumpBoost(game.Players.LocalPlayer)
+    end
+end
+
 local player = game.Players.LocalPlayer
 
 if player.Character then
