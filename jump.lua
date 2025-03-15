@@ -6,22 +6,18 @@ getgenv().autoKillEnemies = {
     enabled = false,
     questNPC = "Bandit Quest Giver",  -- Adjust NPC name as necessary
     targetEnemy = "Bandit",           -- Adjust enemy name as necessary
-    weaponSlot = 1                    -- This can be used if you have a specific weapon slot, but not needed for Combat
 }
 
--- Equip Combat Tool (Melee)
+-- Equip Combat from Hotbar Slot 1
 local function equipCombat()
-    local backpack = player:FindFirstChild("Backpack")
-    if backpack then
-        local combat = backpack:FindFirstChild("Combat")  -- The name of the main combat tool
-        if combat then
-            -- Equip Combat Tool (this simulates the melee combat)
-            player.Character.Humanoid:EquipTool(combat)
-        else
-            warn("Combat tool not found in Backpack.")
-        end
+    local backpack = player.Backpack
+    local combatTool = backpack:FindFirstChild("Combat")  -- Slot 1 tool should be called "Combat"
+    
+    if combatTool then
+        -- Equip Combat by activating it directly in the hotbar
+        player.Character.Humanoid:EquipTool(combatTool)
     else
-        warn("Backpack not found.")
+        warn("Combat tool not found in hotbar.")
     end
 end
 
@@ -47,9 +43,9 @@ local function attackEnemy(enemy)
         -- Teleport above the enemy
         humanoidRootPart.CFrame = enemy.HumanoidRootPart.CFrame + Vector3.new(0, 20, 0)
         wait(0.5)  -- Give it a moment to teleport
-        -- Simulate a Melee Attack by clicking
+        -- Simulate a Melee Attack using the Combat tool (Main melee)
         game:GetService("VirtualUser"):CaptureController()
-        game:GetService("VirtualUser"):Button1Down(Vector2.new())
+        game:GetService("VirtualUser"):Button1Down(Vector2.new())  -- Simulating the mouse click (attack)
     else
         warn("Enemy does not have a HumanoidRootPart.")
     end
@@ -78,11 +74,12 @@ end
 local function autoKill()
     while getgenv().autoKillEnemies.enabled do
         getQuest()  -- Get the quest from the NPC first
-        equipCombat()  -- Equip the Combat tool (melee)
+
+        equipCombat()  -- Equip the Combat tool from slot 1
 
         local enemy = findClosestEnemy()  -- Find the closest enemy
         if enemy then
-            attackEnemy(enemy)  -- Attack the enemy
+            attackEnemy(enemy)  -- Teleport above and attack the enemy
         else
             warn("No enemies found nearby.")
         end
