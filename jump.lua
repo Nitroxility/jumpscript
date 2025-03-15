@@ -23,38 +23,73 @@ end
 
 -- Get Quest from NPC
 -- Get Quest from NPC and accept it with options
+-- Get Quest from NPC and accept it with options
 local function getQuest()
     local questNPC = workspace:FindFirstChild(getgenv().autoKillEnemies.questNPC, true)
+    
     if questNPC then
         print("Found quest NPC: " .. getgenv().autoKillEnemies.questNPC)  -- Debugging output
+        -- Teleport player to NPC
         player.Character.HumanoidRootPart.CFrame = questNPC.HumanoidRootPart.CFrame
-        wait(0.5)  -- Delay to ensure the player gets to the NPC
-        
-        -- First ProximityPrompt (Interact with the NPC)
+        wait(1)  -- Give some time for teleporting to the NPC
+
+        -- First ProximityPrompt: Interact with the NPC
         local prompt1 = questNPC:FindFirstChild("ProximityPrompt")
         if prompt1 then
-            fireproximityprompt(prompt1, 0)  -- Interact with NPC
-            wait(0.5)  -- Short delay to ensure the first prompt completes
+            print("Firing the first ProximityPrompt (Interact with NPC).")
+            fireproximityprompt(prompt1, 0)  -- Interact with the NPC
+            wait(2)  -- Wait for interaction to complete
         else
             warn("No ProximityPrompt found on NPC for initial interaction.")
             return
         end
-        
-        -- Second ProximityPrompt (Select "Bandits" option - Option 1)
-        local option1 = workspace:FindFirstChild("Option1")  -- Replace with actual path to the option for "Bandits"
+
+        -- Ensure the NPC interaction has been processed
+        wait(2)
+
+        -- Second ProximityPrompt: Select the "Bandits" quest option
+        local option1 = workspace:FindFirstChild("Option1")  -- Adjust to the actual path of "Bandits" option
         if option1 then
             local prompt2 = option1:FindFirstChild("ProximityPrompt")
             if prompt2 then
-                fireproximityprompt(prompt2, 0)  -- Select "Bandits"
-                wait(0.5)  -- Delay to ensure the option is selected
+                print("Firing the second ProximityPrompt (Select 'Bandits' quest option).")
+                fireproximityprompt(prompt2, 0)  -- Select the Bandits quest option
+                wait(2)  -- Wait to ensure the quest is selected
             else
-                warn("No ProximityPrompt found for Bandits option.")
+                warn("No ProximityPrompt found for 'Bandits' option.")
                 return
             end
         else
             warn("Option 1 'Bandits' not found.")
             return
         end
+
+        -- Ensure the quest option has been selected
+        wait(1)
+
+        -- Third ProximityPrompt: Confirm the quest
+        local confirmButton = workspace:FindFirstChild("ConfirmButton")  -- Adjust to the actual path of Confirm button
+        if confirmButton then
+            local prompt3 = confirmButton:FindFirstChild("ProximityPrompt")
+            if prompt3 then
+                print("Firing the third ProximityPrompt (Confirm the quest).")
+                fireproximityprompt(prompt3, 0)  -- Confirm the quest
+                getgenv().autoKillEnemies.questAccepted = true  -- Mark quest as accepted
+                print("Quest accepted!")  -- Debugging output
+                return  -- Exit the function once the quest is accepted
+            else
+                warn("No ProximityPrompt found for Confirm button.")
+                return
+            end
+        else
+            warn("Confirm button not found.")
+            return
+        end
+    else
+        warn("Quest NPC not found: " .. getgenv().autoKillEnemies.questNPC)
+    end
+end
+
         
         -- Third ProximityPrompt (Confirm the quest)
         local confirmButton = workspace:FindFirstChild("ConfirmButton")  -- Replace with actual path to the confirm button
