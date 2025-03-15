@@ -13,7 +13,7 @@ getgenv().autoKillEnemies = {
 local function equipWeapon(slot)
     local backpack = player:FindFirstChild("Backpack")
     if backpack then
-        local weapon = backpack:FindFirstChild("YourWeaponNameHere")  -- Specify weapon by name
+        local weapon = backpack:FindFirstChild("Combat")  -- Specify weapon by name
         if weapon and weapon.Parent ~= character then
             character.Humanoid:EquipTool(weapon)
         end
