@@ -9,6 +9,7 @@ getgenv().autoKillEnemies = {
     weaponSlot = 1                    -- Weapon slot to equip
 }
 
+
 -- Equip Weapon Function
 local function equipWeapon(slot)
     local backpack = player:FindFirstChild("Backpack")
