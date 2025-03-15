@@ -13,7 +13,7 @@ getgenv().autoKillEnemies = {
 local function equipWeapon(slot)
     local backpack = player:FindFirstChild("Backpack")
     if backpack then
-        local weapon = backpack:FindFirstChildOfClass("Tool")
+        local weapon = backpack:FindFirstChild("YourWeaponNameHere")  -- Specify weapon by name
         if weapon and weapon.Parent ~= character then
             character.Humanoid:EquipTool(weapon)
         end
@@ -26,7 +26,12 @@ local function getQuest()
     if questNPC then
         player.Character.HumanoidRootPart.CFrame = questNPC.HumanoidRootPart.CFrame
         wait(0.5)
-        fireproximityprompt(questNPC:FindFirstChild("ProximityPrompt"), 0)
+        local prompt = questNPC:FindFirstChild("ProximityPrompt")
+        if prompt then
+            fireproximityprompt(prompt, 0)
+        else
+            warn("No ProximityPrompt found on NPC.")
+        end
     end
 end
 
@@ -38,6 +43,8 @@ local function attackEnemy(enemy)
         wait(0.1)
         game:GetService("VirtualUser"):CaptureController()
         game:GetService("VirtualUser"):Button1Down(Vector2.new())
+    else
+        warn("Enemy does not have a HumanoidRootPart.")
     end
 end
 
@@ -59,6 +66,6 @@ local function autoKill()
         if enemy then
             attackEnemy(enemy)
         end
-        wait(0.1)
+        wait(0.1)  -- Add a small delay to avoid high CPU usage
     end
 end
